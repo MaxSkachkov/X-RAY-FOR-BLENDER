@@ -22,6 +22,12 @@ function applyLanguage(next, updateUrl = true) {
   document.title = t("metaTitle");
   const description = $('meta[name="description"]');
   if (description) description.content = t("metaDescription");
+  const ogTitle = $('meta[property="og:title"]');
+  const ogDescription = $('meta[property="og:description"]');
+  const ogUrl = $('meta[property="og:url"]');
+  if (ogTitle) ogTitle.content = t("metaTitle");
+  if (ogDescription) ogDescription.content = t("metaDescription");
+  if (ogUrl) ogUrl.content = `https://maxskachkov.github.io/ptsk1/?lang=${language}`;
   const canonical = $('link[rel="canonical"]');
   if (canonical) canonical.href = `https://maxskachkov.github.io/ptsk1/?lang=${language}`;
   $$("[data-i18n]").forEach((node) => {
