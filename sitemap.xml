@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://maxskachkov.github.io/ptsk1/</loc>
-  </url>
+  <url><loc>https://maxskachkov.github.io/ptsk1/?lang=en</loc><xhtml:link xmlns:xhtml="http://www.w3.org/1999/xhtml" rel="alternate" hreflang="en" href="https://maxskachkov.github.io/ptsk1/?lang=en"/></url>
+  <url><loc>https://maxskachkov.github.io/ptsk1/?lang=sk</loc><xhtml:link xmlns:xhtml="http://www.w3.org/1999/xhtml" rel="alternate" hreflang="sk" href="https://maxskachkov.github.io/ptsk1/?lang=sk"/></url>
+  <url><loc>https://maxskachkov.github.io/ptsk1/?lang=uk</loc><xhtml:link xmlns:xhtml="http://www.w3.org/1999/xhtml" rel="alternate" hreflang="uk" href="https://maxskachkov.github.io/ptsk1/?lang=uk"/></url>
+  <url><loc>https://maxskachkov.github.io/ptsk1/?lang=ru</loc><xhtml:link xmlns:xhtml="http://www.w3.org/1999/xhtml" rel="alternate" hreflang="ru" href="https://maxskachkov.github.io/ptsk1/?lang=ru"/></url>
 </urlset>
