@@ -1,4 +1,6 @@
 import { localeDictionary } from "./locales.js";
+import { inspectGLB } from "./glb-safety.js";
+import { suggestPoseMapping } from "./pose-mapping.js";
 
 const LANGS = ["en", "sk", "uk", "ru"];
 const params = new URLSearchParams(location.search);
@@ -202,53 +204,6 @@ function clearError() {
   $("#viewer-loading").hidden = true;
 }
 
-function safeGLBManifest(buffer) {
-  if (!(buffer instanceof ArrayBuffer) || buffer.byteLength < 20 || buffer.byteLength > MAX_MODEL_BYTES) {
-    throw new Error("invalid");
-  }
-  const view = new DataView(buffer);
-  if (view.getUint32(0, true) !== 0x46546c67 || view.getUint32(4, true) !== 2 || view.getUint32(8, true) !== buffer.byteLength) {
-    throw new Error("invalid");
-  }
-  let offset = 12;
-  let json = null;
-  while (offset + 8 <= buffer.byteLength) {
-    const length = view.getUint32(offset, true);
-    const type = view.getUint32(offset + 4, true);
-    offset += 8;
-    if (length > buffer.byteLength - offset) throw new Error("invalid");
-    if (type === 0x4e4f534a) {
-      const text = new TextDecoder().decode(new Uint8Array(buffer, offset, length)).replace(/[\u0000\u0020]+$/g, "");
-      try { json = JSON.parse(text); } catch { throw new Error("invalid"); }
-      break;
-    }
-    offset += length;
-  }
-  if (!json || !/^2\.0(?:$|\.)/.test(json.asset?.version ?? "")) throw new Error("invalid");
-  const references = [
-    ...(Array.isArray(json.buffers) ? json.buffers : []),
-    ...(Array.isArray(json.images) ? json.images : [])
-  ];
-  if (references.some((item) => item.uri && !item.uri.startsWith("data:"))) throw new Error("external");
-  if ((json.nodes?.length ?? 0) > MAX_NODES) throw new Error("complex");
-  const boneCount = new Set((json.skins ?? []).flatMap((skin) => skin.joints ?? [])).size;
-  if (boneCount > MAX_BONES) throw new Error("complex");
-  const vertexIndices = (json.meshes ?? []).flatMap((mesh) =>
-    (mesh.primitives ?? []).map((primitive) => primitive.attributes?.POSITION).filter(Number.isInteger)
-  );
-  const vertexCount = vertexIndices.reduce((total, index) => total + (json.accessors?.[index]?.count ?? 0), 0);
-  if (vertexCount > MAX_VERTICES) throw new Error("complex");
-  const keyCount = (json.accessors ?? []).reduce((total, accessor) => total + (accessor.count ?? 0), 0);
-  if (keyCount > MAX_ANIMATION_KEYS) throw new Error("complex");
-  const supported = new Set([
-    "KHR_materials_unlit", "KHR_materials_emissive_strength", "KHR_materials_ior",
-    "KHR_materials_specular", "KHR_materials_clearcoat", "KHR_texture_transform",
-    "KHR_mesh_quantization", "KHR_lights_punctual"
-  ]);
-  if ((json.extensionsRequired ?? []).some((extension) => !supported.has(extension))) throw new Error("unsupported");
-  return json;
-}
-
 function errorMessage(error) {
   const key = error?.message;
   const mapped = {
@@ -327,7 +282,6 @@ async function initializeViewer() {
     setViewerStatus(t("statusNoWebGL"), "error");
     $("#load-demo").disabled = true;
     $("#model-file").disabled = true;
-    $("#model-file").nextElementSibling?.classList.add("is-disabled");
   }
 }
 
@@ -353,24 +307,6 @@ function handleViewerKeys(event) {
   }
 }
 
-function animate() {
-  animationFrame = requestAnimationFrame(animate);
-  if (mixer) mixer.update(Math.min(THREE.ClockDelta ?? 0, 0.05));
-  if (meshStates.length) {
-    for (const entry of meshStates) {
-      entry.overlay.position.copy(entry.source.position);
-      entry.overlay.quaternion.copy(entry.source.quaternion);
-      entry.overlay.scale.copy(entry.source.scale);
-      if (entry.source.morphTargetInfluences && entry.overlay.morphTargetInfluences) {
-        entry.overlay.morphTargetInfluences = [...entry.source.morphTargetInfluences];
-      }
-    }
-  }
-  controls?.update();
-  renderer?.render(scene, camera);
-}
-
-const clock = { last: 0 };
 function animate() {
   animationFrame = requestAnimationFrame(animate);
   const now = performance.now();
@@ -482,10 +418,10 @@ function getBonesAndMeshes(root) {
   return { skinned, meshes, bones: [...uniqueBones.values()], skeletons: [...skeletons] };
 }
 
-function makeOverlay(source) {
+function makeOverlay(source, wireMaterial) {
   const overlay = source.isSkinnedMesh
-    ? new THREE.SkinnedMesh(source.geometry, makeMaterials(source.material).wire)
-    : new THREE.Mesh(source.geometry, makeMaterials(source.material).wire);
+    ? new THREE.SkinnedMesh(source.geometry, wireMaterial)
+    : new THREE.Mesh(source.geometry, wireMaterial);
   overlay.name = `${source.name || "mesh"} wireframe overlay`;
   overlay.position.copy(source.position);
   overlay.quaternion.copy(source.quaternion);
@@ -598,30 +534,10 @@ function readMapping() {
   return result;
 }
 
-function boneSide(name, side) {
-  const raw = name.toLowerCase();
-  const normalized = raw.replace(/[^a-z0-9]/g, "");
-  if (side === "Left") return normalized.includes("left") || /(^|[^a-z])l([^a-z]|$)/i.test(raw);
-  return normalized.includes("right") || /(^|[^a-z])r([^a-z]|$)/i.test(raw);
-}
-
-function suggestBone(roleKey) {
-  const side = roleKey.endsWith("Left") ? "Left" : "Right";
-  const family = roleKey.startsWith("upper") ? "upper" : roleKey.startsWith("forearm") ? "forearm" : "lowerLeg";
-  const candidates = boneList.filter((bone) => {
-    const raw = bone.name.toLowerCase();
-    const compact = raw.replace(/[^a-z0-9]/g, "");
-    if (!boneSide(raw, side)) return false;
-    if (family === "upper") return compact.includes("arm") && !/forearm|lowerarm|hand|finger|shoulder|clavicle/.test(compact);
-    if (family === "forearm") return /forearm|lowerarm/.test(compact);
-    return /calf|shin/.test(compact) || (compact.includes("leg") && !/upleg|thigh|foot|toe/.test(compact));
-  });
-  return candidates.length === 1 ? candidates[0] : null;
-}
-
 function autoMapBones() {
+  const suggestions = suggestPoseMapping(boneList);
   for (const [key] of roleKeys) {
-    const match = suggestBone(key);
+    const match = suggestions[key];
     if (match) $(`#map-${key}`).value = match.uuid;
   }
   updatePoseAvailability();
@@ -671,6 +587,11 @@ function verifyTextureLimits(root) {
 
 function updateControlAvailability() {
   const hasModel = Boolean(activeGltf);
+  if (!hasModel) {
+    clearModelStatus();
+    $("#skeleton-state").textContent = "—";
+    return;
+  }
   $$(".mode-button").forEach((button) => {
     const needsRig = button.dataset.mode === "bones" || button.dataset.mode === "xray";
     button.disabled = !hasModel || (needsRig && !modelHasSkeleton);
@@ -735,7 +656,7 @@ function setAnimations(clips) {
 }
 
 async function parseAndAdopt(buffer, filename, isDemo, token) {
-  safeGLBManifest(buffer);
+  inspectGLB(buffer);
   const manager = new THREE.LoadingManager();
   manager.setURLModifier((url) => {
     if (url.startsWith("data:")) return url;
@@ -761,8 +682,7 @@ async function parseAndAdopt(buffer, filename, isDemo, token) {
     boneList = stats.bones;
     meshStates = stats.meshes.map((source) => {
       const materials = makeMaterials(source.material);
-      const overlay = makeOverlay(source);
-      overlay.material = materials.wire;
+      const overlay = makeOverlay(source, materials.wire);
       return { source, overlay, materials };
     });
     makeSkeletonHelpers(stats.skinned);
@@ -773,7 +693,6 @@ async function parseAndAdopt(buffer, filename, isDemo, token) {
     setAnimations(gltf.animations);
     createMappingControls();
     fillBoneOptions($("#bone-select"), "noBones");
-    $("#bone-select").addEventListener("change", () => selectBone($("#bone-select").value), { once: true });
     $("#bone-select").onchange = () => selectBone($("#bone-select").value);
     $("#model-summary .summary-empty").textContent = filename;
     $("#mesh-count").textContent = t("meshesCount", { count: stats.meshes.length });
@@ -785,7 +704,6 @@ async function parseAndAdopt(buffer, filename, isDemo, token) {
     syncVisualMode();
     updateControlAvailability();
     if (isDemo && modelHasSkeleton) autoMapBones();
-    if (!gltf.animations.length) $("#pose-test-status").textContent = t("statusNoAnimations");
     camera.position.set(0, 1.15, 4.2);
     controls.target.set(0, 1.05, 0);
     controls.update();
