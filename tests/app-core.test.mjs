@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { inspectGLB, GLB_LIMITS } from "../glb-safety.js";
 import { suggestPoseMapping } from "../pose-mapping.js";
 
@@ -92,4 +93,42 @@ test("does not guess when bone names are absent or ambiguous", () => {
   ];
   assert.equal(suggestPoseMapping(ambiguous).upperLeft, null);
   assert.equal(suggestPoseMapping(ambiguous).upperRight.name, "RightArm");
+});
+
+test("matches the actual RobotExpressive demo bone names", () => {
+  const names = [
+    "UpperArm.L", "UpperArm.R", "LowerArm.L", "LowerArm.R",
+    "UpperLeg.L", "UpperLeg.R", "LowerLeg.L", "LowerLeg.R"
+  ];
+  const bones = names.map((name, index) => ({ name, uuid: `demo-${index}` }));
+  const result = suggestPoseMapping(bones);
+  assert.equal(result.upperLeft.name, "UpperArm.L");
+  assert.equal(result.upperRight.name, "UpperArm.R");
+  assert.equal(result.forearmLeft.name, "LowerArm.L");
+  assert.equal(result.forearmRight.name, "LowerArm.R");
+  assert.equal(result.lowerLegLeft.name, "LowerLeg.L");
+  assert.equal(result.lowerLegRight.name, "LowerLeg.R");
+});
+
+test("a model without skin joints keeps pose mapping unavailable", () => {
+  const manifest = { ...validManifest(), skins: [] };
+  assert.deepEqual(Object.values(suggestPoseMapping([])), [null, null, null, null, null, null]);
+  assert.equal(inspectGLB(makeGLB(manifest)).skins, 0);
+});
+
+test("page exposes all four modes, accessible status, mobile layout, and keyboard controls", () => {
+  const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../main.css", import.meta.url), "utf8");
+  const app = readFileSync(new URL("../app.js", import.meta.url), "utf8");
+  for (const mode of ["surface", "mesh", "bones", "xray"]) {
+    assert.match(html, new RegExp(`data-mode="${mode}"`));
+    assert.match(app, new RegExp(`mode === "${mode}"`));
+  }
+  assert.match(html, /viewer-summary[^>]*aria-live="polite"/);
+  assert.match(html, /role="alert"/);
+  assert.match(css, /@media \(max-width: 720px\)/);
+  assert.match(css, /touch-action: pan-y pinch-zoom/);
+  assert.match(app, /ArrowLeft|ArrowRight/);
+  assert.match(app, /resetPose\(\)/);
+  assert.match(app, /statusNoSkeleton/);
 });
