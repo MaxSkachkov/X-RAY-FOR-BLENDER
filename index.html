@@ -1,139 +1,320 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f0e7">
-  <meta name="description" content="Портфолио Макса Скачкова, full-stack разработчика. Веб-проекты, понятные интерфейсы и интерактивные инструменты.">
+  <meta name="theme-color" content="#f4f1eb">
+  <meta name="description" content="Prepare character reference sheets and inspect real GLB models, polygon surfaces, skinning skeletons, and animation in your browser.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Макс Скачков — full-stack разработчик">
-  <meta property="og:description" content="Цифровые проекты с понятным интерфейсом и работающей логикой.">
+  <meta property="og:title" content="X-RAY FOR BLENDER — Character Reference Workstation">
+  <meta property="og:description" content="Prepare 2D character references, then inspect a real 3D model and its skinning skeleton.">
   <meta property="og:url" content="https://maxskachkov.github.io/ptsk1/">
   <link rel="canonical" href="https://maxskachkov.github.io/ptsk1/">
+  <link rel="alternate" hreflang="en" href="https://maxskachkov.github.io/ptsk1/?lang=en">
+  <link rel="alternate" hreflang="sk" href="https://maxskachkov.github.io/ptsk1/?lang=sk">
+  <link rel="alternate" hreflang="uk" href="https://maxskachkov.github.io/ptsk1/?lang=uk">
+  <link rel="alternate" hreflang="ru" href="https://maxskachkov.github.io/ptsk1/?lang=ru">
+  <link rel="alternate" hreflang="x-default" href="https://maxskachkov.github.io/ptsk1/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="main.css">
-  <title>Макс Скачков — full-stack разработчик</title>
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Макс Скачков",
-      "jobTitle": "Full-stack developer",
-      "url": "https://github.com/MaxSkachkov",
-      "sameAs": [
-        "https://github.com/MaxSkachkov",
-        "https://codepen.io/skachkovdesign"
-      ]
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/"
     }
+  }
+  </script>
+  <title>X-RAY FOR BLENDER — Character Reference Workstation</title>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "X-RAY FOR BLENDER",
+    "applicationCategory": "MultimediaApplication",
+    "operatingSystem": "Any",
+    "description": "A browser tool for preparing character reference images and inspecting GLB models, meshes, skinning skeletons, and animation.",
+    "url": "https://maxskachkov.github.io/ptsk1/",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  }
   </script>
 </head>
-<body>
-  <a class="skip-link" href="#main">Перейти к содержанию</a>
+<body data-locale="en">
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
   <header class="site-header">
-    <a class="brand" href="#top" aria-label="Skachkov Design — на главную">
-      <span class="brand-mark" aria-hidden="true">S</span>
-      <span>skachkov<span class="brand-muted">design</span></span>
+    <a class="brand" href="#top" aria-label="X-RAY FOR BLENDER home">
+      <span class="brand-mark" aria-hidden="true">XR</span>
+      <span class="brand-name">X-RAY <span>FOR BLENDER</span></span>
     </a>
-    <nav aria-label="Основная навигация">
-      <a href="#work">Проекты</a>
-      <a href="#approach">Подход</a>
-      <a class="nav-contact" href="https://github.com/MaxSkachkov">Связаться <span aria-hidden="true">↗</span></a>
-    </nav>
+    <div class="header-tools">
+      <span class="privacy-note"><span class="privacy-dot" aria-hidden="true"></span><span data-i18n="localOnly">Files stay in this browser</span></span>
+      <label class="sr-only" for="language" data-i18n="languageLabel">Language</label>
+      <select id="language" class="language-select" aria-label="Language">
+        <option value="en">English</option>
+        <option value="sk">Slovenčina</option>
+        <option value="uk">Українська</option>
+        <option value="ru">Русский</option>
+      </select>
+    </div>
   </header>
 
   <main id="main">
-    <section class="hero page-shell" id="top" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Макс Скачков · full-stack разработчик</p>
-        <h1 id="hero-title">Цифровые продукты,<br><span>которыми понятно пользоваться.</span></h1>
-        <p class="hero-intro">Создаю веб-проекты от идеи до работающего интерфейса. Сначала разбираюсь в задаче, затем собираю простое решение и измеряю, помогает ли оно пользователю.</p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#work">Посмотреть проекты <span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="https://github.com/MaxSkachkov">Написать в GitHub <span aria-hidden="true">↗</span></a>
-        </div>
-        <p class="hero-note">Дизайн · разработка · запуск</p>
+    <section class="intro page-shell" id="top" aria-labelledby="page-title">
+      <div class="intro-copy">
+        <p class="eyebrow" data-i18n="eyebrow">CHARACTER WORKSTATION · BLENDER-READY</p>
+        <h1 id="page-title" data-i18n="title">Prepare the views.<br>Inspect the model.</h1>
+        <p class="intro-text" data-i18n="subtitle">A focused companion for character modeling: organize consistent 2D references, then inspect a finished GLB model and its real skinning skeleton.</p>
       </div>
-      <div class="hero-art" aria-label="Схема: идея, интерфейс, работающий продукт">
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="orbit orbit-three"></div>
-        <div class="hero-core"><span class="core-label">от идеи</span><span class="core-arrow" aria-hidden="true">↓</span><span class="core-label">к продукту</span></div>
-        <span class="orbit-point point-one" aria-hidden="true"></span>
-        <span class="orbit-point point-two" aria-hidden="true"></span>
-        <span class="orbit-point point-three" aria-hidden="true"></span>
-      </div>
-      <a class="scroll-cue" href="#work"><span aria-hidden="true">↓</span> Листайте к проектам</a>
+      <ol class="workflow" aria-label="Workflow">
+        <li><span>01</span><a href="#references" data-i18n="stepRefs">Prepare references</a></li>
+        <li><span>02</span><a href="#viewer" data-i18n="stepModel">Load a model</a></li>
+        <li><span>03</span><a href="#pose-tools" data-i18n="stepPose">Check a pose</a></li>
+      </ol>
     </section>
 
-    <section class="section page-shell" id="work" aria-labelledby="work-title">
+    <section class="section page-shell" id="references" aria-labelledby="refs-title">
       <div class="section-heading">
         <div>
-          <p class="eyebrow">Выбранная работа</p>
-          <h2 id="work-title">Проект</h2>
+          <p class="section-index">01 / 02</p>
+          <h2 id="refs-title" data-i18n="refsTitle">Prepare 2D references</h2>
         </div>
-        <p class="section-intro">Каждый инструмент начинается с вопроса: что человеку нужно понять или сделать?</p>
+        <p class="section-lede" data-i18n="refsLede">This step organizes images only. It does not create a 3D mesh or rig.</p>
       </div>
-      <article class="project-card">
-        <div class="project-preview" aria-hidden="true">
-          <div class="preview-window">
-            <div class="preview-top"><span></span><span></span><span></span><b>DEMOFIZ</b></div>
-            <div class="preview-content">
-              <span class="preview-kicker">ФИЗИКА · ЭЛЕКТРИЧЕСТВО</span>
-              <strong>Закон Ома</strong>
-              <div class="formula">U <span>=</span> I <span>×</span> R</div>
-              <div class="preview-sliders"><i></i><i></i><i></i></div>
-            </div>
+
+      <div class="instruction-strip">
+        <span class="strip-mark" aria-hidden="true">A</span>
+        <p data-i18n="openingInstruction">First prepare your character images. Use the same character, outfit, lighting, and scale in every view.</p>
+      </div>
+
+      <details class="prompt-details">
+        <summary><span data-i18n="promptTitle">Copyable image-generation prompt</span><span class="summary-hint" data-i18n="promptHint">Edit the bracketed fields first</span></summary>
+        <div class="prompt-content">
+          <label class="sr-only" for="reference-prompt" data-i18n="promptLabel">Character reference prompt</label>
+          <textarea id="reference-prompt" rows="14" spellcheck="true"></textarea>
+          <div class="prompt-actions">
+            <p class="microcopy" data-i18n="promptCaution">Generate each view separately. Image models may not preserve exact identity or proportions.</p>
+            <button class="button button-secondary" id="copy-prompt" type="button" data-i18n="copyPrompt">Copy prompt</button>
           </div>
-          <span class="preview-caption">учись через эксперимент</span>
+          <p class="inline-status" id="copy-status" aria-live="polite"></p>
         </div>
-        <div class="project-copy">
-          <div class="project-meta"><span class="project-type">Образовательный инструмент</span><span class="project-year">2026</span></div>
-          <h3>DEMOFIZ</h3>
-          <p>Интерактивные симуляции физических законов помогают ученику менять параметры и сразу видеть, как меняется результат.</p>
-          <ul class="project-points">
-            <li>Расчёт по закону Ома с наглядным результатом</li>
-            <li>Простые объяснения без лишней терминологии</li>
-            <li>Основа для каталога симуляций по физике</li>
-          </ul>
-          <div class="project-links">
-            <a class="button button-primary" href="https://maxskachkov.github.io/demofiz/">Открыть DEMOFIZ <span aria-hidden="true">↗</span></a>
-            <a class="text-link" href="https://github.com/MaxSkachkov/demofiz">Исходный код <span aria-hidden="true">↗</span></a>
-          </div>
+      </details>
+
+      <div class="reference-heading">
+        <div>
+          <h3 data-i18n="requiredViews">Main set · same neutral A-pose</h3>
+          <p data-i18n="requiredViewsHelp">One image per view. A multi-view collage is useful for a quick overview, but not as the only source.</p>
         </div>
-      </article>
+        <span class="count-pill" id="reference-count">0 / 4</span>
+      </div>
+      <div class="reference-grid" id="required-reference-grid">
+        <article class="reference-tile" data-slot="front">
+          <div class="tile-title"><span data-i18n="front">Front</span><span class="required-badge" data-i18n="required">Required</span></div>
+          <div class="image-preview" id="preview-front"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-front" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-front" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="front" hidden data-i18n="removeImage">Remove</button>
+        </article>
+        <article class="reference-tile" data-slot="back">
+          <div class="tile-title"><span data-i18n="back">Back</span><span class="required-badge" data-i18n="required">Required</span></div>
+          <div class="image-preview" id="preview-back"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-back" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-back" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="back" hidden data-i18n="removeImage">Remove</button>
+        </article>
+        <article class="reference-tile" data-slot="left">
+          <div class="tile-title"><span data-i18n="left">Left side</span><span class="required-badge" data-i18n="required">Required</span></div>
+          <div class="image-preview" id="preview-left"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-left" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-left" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="left" hidden data-i18n="removeImage">Remove</button>
+        </article>
+        <article class="reference-tile" data-slot="right">
+          <div class="tile-title"><span data-i18n="right">Right side</span><span class="required-badge" data-i18n="required">Required</span></div>
+          <div class="image-preview" id="preview-right"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-right" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-right" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="right" hidden data-i18n="removeImage">Remove</button>
+        </article>
+      </div>
+      <p class="form-status" id="reference-status" aria-live="polite" data-i18n="referenceStatus">Images are checked and previewed in this browser only. They are not uploaded to a server.</p>
+
+      <div class="reference-heading additional-heading">
+        <div>
+          <h3 data-i18n="extraViews">Additional views</h3>
+          <p data-i18n="extraViewsHelp">Use these to clarify identity, small details, or asymmetry.</p>
+        </div>
+      </div>
+      <div class="reference-grid reference-grid-extra" id="extra-reference-grid">
+        <article class="reference-tile" data-slot="threeQuarter">
+          <div class="tile-title"><span data-i18n="threeQuarter">Front three-quarter</span><span class="optional-badge" data-i18n="optional">Optional</span></div>
+          <div class="image-preview" id="preview-threeQuarter"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-threeQuarter" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-threeQuarter" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="threeQuarter" hidden data-i18n="removeImage">Remove</button>
+        </article>
+        <article class="reference-tile" data-slot="face">
+          <div class="tile-title"><span data-i18n="face">Face</span><span class="optional-badge" data-i18n="optional">Optional</span></div>
+          <div class="image-preview" id="preview-face"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-face" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-face" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="face" hidden data-i18n="removeImage">Remove</button>
+        </article>
+        <article class="reference-tile" data-slot="hands">
+          <div class="tile-title"><span data-i18n="hands">Hands</span><span class="optional-badge" data-i18n="optional">Optional</span></div>
+          <div class="image-preview" id="preview-hands"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-hands" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-hands" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="hands" hidden data-i18n="removeImage">Remove</button>
+        </article>
+        <article class="reference-tile" data-slot="feet">
+          <div class="tile-title"><span data-i18n="feet">Feet</span><span class="optional-badge" data-i18n="optional">Optional</span></div>
+          <div class="image-preview" id="preview-feet"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-feet" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-feet" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="feet" hidden data-i18n="removeImage">Remove</button>
+        </article>
+        <article class="reference-tile" data-slot="asymmetry">
+          <div class="tile-title"><span data-i18n="asymmetry">Asymmetric details</span><span class="optional-badge" data-i18n="optional">Optional</span></div>
+          <div class="image-preview" id="preview-asymmetry"><span data-i18n="emptyPreview">No image yet</span></div>
+          <input class="file-input" id="image-asymmetry" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="button button-quiet file-label" for="image-asymmetry" data-i18n="chooseImage">Choose image</label>
+          <button class="remove-image" type="button" data-remove="asymmetry" hidden data-i18n="removeImage">Remove</button>
+        </article>
+      </div>
+
+      <div class="note-grid">
+        <article class="plain-note">
+          <span class="note-number">A</span>
+          <div><h3 data-i18n="poseRefsTitle">Reference views show shape</h3><p data-i18n="poseRefsText">Front, back, and side views keep one neutral A-pose. Change the viewing direction, not the character’s pose.</p></div>
+        </article>
+        <article class="plain-note">
+          <span class="note-number">B</span>
+          <div><h3 data-i18n="deformationTitle">Bent limbs check deformation</h3><p data-i18n="deformationText">Arm and leg bends are for checking a finished rig. A seated pose does not replace the main reference set.</p></div>
+        </article>
+      </div>
     </section>
 
-    <section class="section section-soft" id="approach" aria-labelledby="approach-title">
+    <section class="section viewer-section" id="viewer" aria-labelledby="viewer-title">
       <div class="page-shell">
         <div class="section-heading">
           <div>
-            <p class="eyebrow">Как устроена работа</p>
-            <h2 id="approach-title">От задачи к результату</h2>
+            <p class="section-index">02 / 02</p>
+            <h2 id="viewer-title" data-i18n="viewerTitle">Inspect a finished 3D model</h2>
           </div>
-          <p class="section-intro">Понятные шаги помогают держать фокус на цели и не тратить время на лишнее.</p>
+          <p class="section-lede" data-i18n="viewerLede">This viewer reads geometry, skinning skeletons, and animations already stored in a GLB file. It does not build a rig from photos.</p>
         </div>
-        <ol class="steps">
-          <li><span class="step-number">01</span><div><h3>Понять задачу</h3><p>Кто будет пользоваться продуктом и что ему нужно сделать?</p></div></li>
-          <li><span class="step-number">02</span><div><h3>Собрать решение</h3><p>Продумать путь пользователя, интерфейс и нужную логику.</p></div></li>
-          <li><span class="step-number">03</span><div><h3>Проверить результат</h3><p>Запустить продукт и смотреть на реальные действия и обратную связь.</p></div></li>
-        </ol>
-      </div>
-    </section>
 
-    <section class="contact page-shell" aria-labelledby="contact-title">
-      <div>
-        <p class="eyebrow">Есть идея?</p>
-        <h2 id="contact-title">Давайте обсудим,<br>какой инструмент ей нужен.</h2>
-        <p>Напишите о задаче — начнём с короткого разговора и поймём, что делать дальше.</p>
+        <div class="model-toolbar">
+          <div class="toolbar-actions">
+            <label class="button button-primary model-upload-label" for="model-file" data-i18n="chooseGlb">Choose GLB model</label>
+            <input class="file-input" id="model-file" type="file" accept=".glb,model/gltf-binary">
+            <button class="button button-secondary" id="load-demo" type="button" data-i18n="loadDemo">Load licensed demo</button>
+          </div>
+          <p class="microcopy" data-i18n="glbLimit">Self-contained GLB only · up to 30 MB · files are processed locally.</p>
+        </div>
+
+        <div class="viewer-layout">
+          <section class="viewer-main" aria-label="3D model viewer">
+            <div class="viewer-stage" id="viewer-stage">
+              <div class="viewer-placeholder" id="viewer-placeholder">
+                <div class="placeholder-mark" aria-hidden="true">3D</div>
+                <h3 data-i18n="emptyViewerTitle">The viewer is ready for a model</h3>
+                <p data-i18n="emptyViewerText">Load the demo or choose a self-contained GLB file from your device.</p>
+                <p class="inline-status" id="viewer-init-status" aria-live="polite"></p>
+              </div>
+              <canvas id="model-canvas" tabindex="0" role="img" aria-label="Interactive 3D model. Use pointer drag to orbit, wheel to zoom, and arrow keys when focused."></canvas>
+              <div class="viewer-loading" id="viewer-loading" hidden role="status" aria-live="polite"></div>
+              <div class="viewer-error" id="viewer-error" role="alert" hidden></div>
+              <div class="viewer-credit" id="demo-credit" hidden>
+                <span data-i18n="demoCredit">Demo model: RobotExpressive — Tomás Laulhé, modified by Don McCurdy, CC0 1.0.</span>
+                <a href="https://github.com/mrdoob/three.js/tree/r182/examples/models/gltf/RobotExpressive" target="_blank" rel="noopener noreferrer" data-i18n="assetSource">Source and license</a>
+              </div>
+            </div>
+            <div class="viewer-summary" id="model-summary" aria-live="polite">
+              <span class="summary-empty" data-i18n="noModel">No model loaded</span>
+              <span class="model-stat"><b data-i18n="skeletonLabel">Skeleton</b><span id="skeleton-state">—</span></span>
+              <span class="model-stat"><b data-i18n="bonesLabel">Bones</b><span id="bone-count">—</span></span>
+              <span class="model-stat"><b data-i18n="meshesLabel">Meshes</b><span id="mesh-count">—</span></span>
+              <span class="model-stat"><b data-i18n="modeLabel">Mode</b><span id="mode-state">Surface</span></span>
+              <span class="model-stat"><b data-i18n="selectedBoneLabel">Selected bone</b><span id="selected-bone-state">—</span></span>
+            </div>
+            <p class="keyboard-note" data-i18n="keyboardHint">Viewer keys: focus the model, then use arrow keys to orbit and + / − to zoom. The page scrolls normally outside the viewer.</p>
+          </section>
+
+          <aside class="viewer-panel" aria-label="Viewer controls">
+            <fieldset class="control-group">
+              <legend data-i18n="displayMode">Display mode</legend>
+              <div class="mode-grid" role="group" aria-label="Display mode">
+                <button class="mode-button is-active" type="button" data-mode="surface" aria-pressed="true" disabled data-i18n="surface">Surface</button>
+                <button class="mode-button" type="button" data-mode="mesh" aria-pressed="false" disabled data-i18n="mesh">Mesh</button>
+                <button class="mode-button" type="button" data-mode="bones" aria-pressed="false" disabled data-i18n="bones">Bones</button>
+                <button class="mode-button" type="button" data-mode="xray" aria-pressed="false" disabled data-i18n="xray">X-ray</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-group">
+              <legend data-i18n="camera">Camera</legend>
+              <div class="camera-grid" role="group" aria-label="Camera views">
+                <button class="button button-quiet camera-button" type="button" data-camera="front" disabled data-i18n="front">Front</button>
+                <button class="button button-quiet camera-button" type="button" data-camera="back" disabled data-i18n="back">Back</button>
+                <button class="button button-quiet camera-button" type="button" data-camera="left" disabled data-i18n="left">Left side</button>
+                <button class="button button-quiet camera-button" type="button" data-camera="right" disabled data-i18n="right">Right side</button>
+              </div>
+              <button class="text-button" type="button" id="reset-camera" disabled data-i18n="resetCamera">Reset camera</button>
+            </fieldset>
+
+            <fieldset class="control-group" id="animation-controls">
+              <legend data-i18n="animation">Animations in this file</legend>
+              <label for="animation-select" data-i18n="animationSelect">Choose animation</label>
+              <select id="animation-select" disabled><option value="" data-i18n="noAnimations">No animations</option></select>
+              <div class="inline-buttons">
+                <button class="button button-quiet" id="play-animation" type="button" disabled data-i18n="play">Play</button>
+                <button class="button button-quiet" id="stop-animation" type="button" disabled data-i18n="stop">Stop</button>
+              </div>
+            </fieldset>
+
+            <fieldset class="control-group" id="pose-tools">
+              <legend data-i18n="poseTools">Pose and bone rotation</legend>
+              <label for="bone-select" data-i18n="chooseBone">Choose a real model bone</label>
+              <select id="bone-select" disabled><option value="" data-i18n="noBones">No bones available</option></select>
+              <p class="microcopy" data-i18n="rigNote">These are deforming bones from the file, not Blender controls, IK, or Rigify handles.</p>
+              <div class="axis-grid">
+                <label for="rotation-x">X°<input id="rotation-x" type="number" min="-180" max="180" step="1" value="0" disabled></label>
+                <label for="rotation-y">Y°<input id="rotation-y" type="number" min="-180" max="180" step="1" value="0" disabled></label>
+                <label for="rotation-z">Z°<input id="rotation-z" type="number" min="-180" max="180" step="1" value="0" disabled></label>
+              </div>
+              <button class="button button-quiet full-button" id="reset-pose" type="button" disabled data-i18n="resetPose">Reset pose and bone changes</button>
+            </fieldset>
+
+            <details class="control-group mapping-details" id="mapping-details">
+              <summary data-i18n="mappingTitle">Map bones for pose checks</summary>
+              <p class="microcopy" data-i18n="mappingHelp">Pose checks are enabled only after both sides of the required bone pair are matched. Names are suggested from the loaded model.</p>
+              <div class="mapping-list" id="mapping-list"></div>
+              <button class="text-button" id="auto-map" type="button" disabled data-i18n="autoMap">Suggest matches from bone names</button>
+              <div class="pose-test-list">
+                <button class="button button-quiet pose-test" type="button" data-pose-test="arms" disabled data-i18n="testArms">Test: raise arms</button>
+                <button class="button button-quiet pose-test" type="button" data-pose-test="elbows" disabled data-i18n="testElbows">Test: bend elbows</button>
+                <button class="button button-quiet pose-test" type="button" data-pose-test="knees" disabled data-i18n="testKnees">Test: bend knees</button>
+              </div>
+              <p class="inline-status" id="pose-test-status" aria-live="polite"></p>
+            </details>
+
+            <div class="compat-note">
+              <h3 data-i18n="blenderLimitTitle">What GLB does and does not carry</h3>
+              <p data-i18n="blenderLimitText">GLB can carry meshes, skinning bones, and animation clips. Blender IK, constraints, drivers, and Rigify controls are not recreated here. Use Blender for full rigging and authoring.</p>
+            </div>
+          </aside>
+        </div>
+        <p class="privacy-footnote" data-i18n="privacyText">Your reference images and GLB are read in this page only. Nothing is uploaded or saved to GitHub. The optional demo model and Three.js library are fetched from their named public sources.</p>
       </div>
-      <a class="button button-dark" href="https://github.com/MaxSkachkov">Связаться через GitHub <span aria-hidden="true">↗</span></a>
     </section>
   </main>
 
   <footer class="site-footer page-shell">
-    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">S</span><span>skachkov<span class="brand-muted">design</span></span></a>
-    <p>Макс Скачков · веб-разработка и цифровые продукты</p>
-    <div class="footer-links"><a href="https://github.com/MaxSkachkov">GitHub</a><a href="https://codepen.io/skachkovdesign">CodePen</a></div>
+    <span>X-RAY FOR BLENDER</span>
+    <span data-i18n="footerText">A reference-preparation and GLB inspection companion — not a replacement for Blender.</span>
   </footer>
+  <script type="module" src="app.js"></script>
 </body>
 </html>
