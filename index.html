@@ -9,17 +9,17 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="X-RAY FOR BLENDER — character reference and rig viewer">
   <meta property="og:description" content="Prepare character references and inspect a real 3D mesh and animation skeleton locally in your browser.">
-  <meta property="og:url" content="https://maxskachkov.github.io/xrayblender/">
-  <meta property="og:image" content="https://maxskachkov.github.io/xrayblender/assets/three-modes-concept.webp">
+  <meta property="og:url" content="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/">
+  <meta property="og:image" content="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/assets/three-modes-concept.webp">
   <meta property="og:locale" content="en_US">
-  <link rel="canonical" href="https://maxskachkov.github.io/xrayblender/">
-  <link rel="alternate" hreflang="en" href="https://maxskachkov.github.io/xrayblender/">
-  <link rel="alternate" hreflang="sk" href="https://maxskachkov.github.io/xrayblender/sk/">
-  <link rel="alternate" hreflang="uk" href="https://maxskachkov.github.io/xrayblender/uk/">
-  <link rel="alternate" hreflang="ru" href="https://maxskachkov.github.io/xrayblender/ru/">
-  <link rel="alternate" hreflang="x-default" href="https://maxskachkov.github.io/xrayblender/">
-  <link rel="icon" href="/xrayblender/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/xrayblender/main.css">
+  <link rel="canonical" href="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/">
+  <link rel="alternate" hreflang="en" href="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/">
+  <link rel="alternate" hreflang="sk" href="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/sk/">
+  <link rel="alternate" hreflang="uk" href="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/uk/">
+  <link rel="alternate" hreflang="ru" href="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://maxskachkov.github.io/X-RAY-FOR-BLENDER/">
+  <link rel="icon" href="/X-RAY-FOR-BLENDER/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/X-RAY-FOR-BLENDER/main.css">
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
   </script>
@@ -107,7 +107,7 @@
             <div class="viewer-facts" id="viewer-facts" data-i18n-aria="factsLabel" aria-label="Model status">
               <span><b data-i18n="skeletonLabel">Skeleton</b><strong id="fact-skeleton">—</strong></span><span><b data-i18n="bonesLabel">Bones</b><strong id="fact-bones">—</strong></span><span><b data-i18n="meshesLabel">Meshes</b><strong id="fact-meshes">—</strong></span><span><b data-i18n="modeLabel">Mode</b><strong id="fact-mode">Surface</strong></span><span><b data-i18n="selectedBoneLabel">Selected bone</b><strong id="fact-selected">—</strong></span>
             </div>
-            <figure class="concept-figure"><img src="/xrayblender/assets/three-modes-concept.webp" width="1672" height="941" loading="lazy" data-i18n-alt="conceptAlt" alt="Three conceptual views of one character: surface, skeleton overlay, and polygon mesh"><figcaption><strong data-i18n="conceptCaption">Display concept</strong><span data-i18n="conceptDescription">Illustration only. The live viewport renders your loaded 3D model.</span></figcaption></figure>
+            <figure class="concept-figure"><img src="/X-RAY-FOR-BLENDER/assets/three-modes-concept.webp" width="1672" height="941" loading="lazy" data-i18n-alt="conceptAlt" alt="Three conceptual views of one character: surface, skeleton overlay, and polygon mesh"><figcaption><strong data-i18n="conceptCaption">Display concept</strong><span data-i18n="conceptDescription">Illustration only. The live viewport renders your loaded 3D model.</span></figcaption></figure>
           </div>
           <aside class="control-panel" aria-label="Model controls">
             <div class="control-group"><p class="eyebrow" data-i18n="displayGroup">Display</p><div class="mode-buttons" role="group" data-i18n-aria="modeGroup" aria-label="Model display mode"><button type="button" data-mode="surface" aria-pressed="true" data-i18n="modeSurface">Surface</button><button type="button" data-mode="wireframe" aria-pressed="false" data-i18n="modeWireframe">Wireframe</button><button type="button" data-mode="bones" aria-pressed="false" disabled data-i18n="modeBones">Bones</button><button type="button" data-mode="xray" aria-pressed="false" disabled data-i18n="modeXray">X-ray overlay</button></div><p class="small-note" data-i18n="boneMeaning">Bones here are the model's deforming skeleton, not anatomical bones or Blender rig controls.</p></div>
@@ -124,6 +124,6 @@
     <section class="section page-shell about-section" id="about" aria-labelledby="about-title"><div class="section-heading"><div><p class="eyebrow" data-i18n="aboutEyebrow">What it can and cannot do</p><h2 id="about-title" data-i18n="aboutTitle">A viewer and preparation helper</h2></div><p class="section-intro" data-i18n="aboutIntro">Use Blender for modeling, rig creation and production work. This app helps you prepare and inspect.</p></div><div class="about-grid"><article><span class="about-index">01</span><h3 data-i18n="limitTitleOne">No photo-to-rig automation</h3><p data-i18n="limitTextOne">Reference images are shown only in your browser. There is no connected algorithm that creates a 3D character or rig from photographs.</p></article><article><span class="about-index">02</span><h3 data-i18n="limitTitleTwo">GLB is an exchange format</h3><p data-i18n="limitTextTwo">Skinning, mesh and embedded animation clips can be inspected. Blender IK, constraints, drivers and all Rigify controls are not preserved as interactive controls here.</p></article><article><span class="about-index">03</span><h3 data-i18n="limitTitleThree">Local processing</h3><p data-i18n="limitTextThree">Images and model data are read in this browser tab. User assets are not sent to a service or committed to the repository. This viewer does not export .blend files.</p></article></div></section>
   </main>
   <footer class="site-footer page-shell"><a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">X</span><span>X-RAY <span class="brand-muted">FOR BLENDER</span></span></a><p data-i18n="footerNote">A lightweight browser companion for character work in Blender.</p><a class="text-link" href="https://github.com/MaxSkachkov/X-RAY-FOR-BLENDER" data-i18n="sourceLink">Source on GitHub ↗</a></footer>
-  <script type="module" src="/xrayblender/app.js"></script>
+  <script type="module" src="/X-RAY-FOR-BLENDER/app.js"></script>
 </body>
 </html>
