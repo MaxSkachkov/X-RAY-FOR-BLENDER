@@ -1,61 +1,55 @@
-# Skachkov Design — visual principles
+# X-RAY FOR BLENDER — evolving design notes
 
-This file carries the visual references from the DEMOFIZ redesign into the portfolio and future product pages. Treat the tokens as a starting point; extend them when a real product need calls for it.
+Carry the useful visual references from previous work into this tool, adapting them to a precise 3D workstation.
 
 ## Direction
 
-- Use a warm, quiet canvas with generous space and clear reading order.
-- Use soft neumorphic relief sparingly: one lifted surface or inset control can show interaction. Avoid adding shadows to every element.
-- Keep the page calm and useful. Each section answers one question; use short, familiar wording.
-- Use diagrams and visualizations to explain a process or relationship. Make them measurable with labels, units, and a clear scale when data is involved.
-- Prefer original CSS or SVG diagrams over decorative stock imagery for explanatory visuals.
+- Warm light background, graphite text, and one calm blue accent.
+- Quiet composition with clear type hierarchy, broad spacing, and logical grouping.
+- Mostly flat surfaces. Use only a faint raised or inset treatment where it clarifies a control; avoid heavy shadows, decorative borders, gradients, and stacks of cards.
+- Keep the 3D model visually dominant and keep controls secondary.
+- Explain one task at a time in familiar language. Make the workflow visible: prepare references → load a model → check a pose.
+- Use small, measured visual cues. Never use a static illustration as a substitute for an interactive 3D model.
 
-## Core colors
+## Tokens
 
 | Token | Value | Use |
 | --- | --- | --- |
-| Paper | #f4f0e7 | Main page background |
-| Paper deep | #ebe5d9 | Quiet section background |
-| Surface | #f7f3eb | Cards and raised controls |
-| Ink | #173b3a | Main text |
-| Ink soft | #526763 | Supporting text |
-| Teal | #176c68 | Links, active states, key data |
-| Teal dark | #105653 | Dark teal interaction states |
-| Warm accent | #d07c54 | Small emphasis or current value |
-| Fine line | #ded8cb | Low contrast separators |
-
-## Shape and depth
-
-- Main cards: 28px radius.
-- Controls: 16px radius; use pill shape only for small navigation actions.
-- Raised surfaces: paired, low contrast shadows from the raised shadow token.
-- Inset surfaces: use the inset shadow token only when an input or selected control needs to look recessed.
-- Keep borders subtle. Add a visible focus ring for keyboard use even when the visual style is soft.
+| Warm background | #f4f1eb | Main page background |
+| Secondary background | #ece9e3 | Viewer section |
+| Surface | #f8f6f1 | Controls and quiet panels |
+| Graphite | #282d33 | Primary text |
+| Supporting text | #535d67 | Explanations |
+| Blue | #476f95 | Primary controls and selected states |
+| Deep blue | #315776 | Links and emphasis |
+| Pale blue | #e8eef4 | Low-key highlights |
+| Warm detail | #d6b786 | Small secondary marker |
+| Error | #a34242 | Error text only |
 
 ## Type and spacing
 
-- Use a system sans-serif stack for legibility and quick loading.
-- Use large, compact headings and a comfortable body line-height around 1.6.
-- Keep paragraph width limited and split complex information into a short sequence.
-- Use responsive sizes with clamp() and leave at least 18–24px between related controls.
-- On narrow screens, stack content instead of shrinking controls or labels.
+- Use a system font stack with Cyrillic glyphs.
+- Body copy is 16px or larger; supporting labels remain comfortably readable.
+- Headings use responsive sizes and compact line-height.
+- Keep 18–24px between related elements and wider gaps between sections.
+- At phone widths, place the model viewer before its settings and stack settings below it.
 
 ## Interaction and accessibility
 
-- Give each page one clear primary action.
-- Use labels that describe the result of an action.
-- Keep keyboard focus visible and provide a skip link on long pages.
-- Respect prefers-reduced-motion.
-- Do not encode meaning with color alone; pair it with text, shape, or position.
+- Use native buttons, inputs, selects, fieldsets, and labels with stable names.
+- Minimum control height: 44px.
+- Keep keyboard focus visible; support keyboard camera controls and reduced motion.
+- Do not trap page scrolling inside the viewer. On touch, preserve vertical page scrolling.
+- Put the model name, skeleton state, bone and mesh counts, display mode, selected bone, and load status in regular HTML beside the canvas.
+- Report missing WebGL and unsupported models in text.
 
 ## Visualization rules
 
-- A diagram should explain one relationship at a time.
-- Label axes, values, and units whenever the visualization represents measurements.
-- Use a quiet base line and one accent for the active value or result.
-- Avoid decorative grids, legends, and labels that do not help answer the learner's question.
-- For physics simulations, let changing a value produce an immediate, visible, correctly scaled change.
+- Surface, wireframe overlay, real skeleton, and X-ray must be views of the same loaded model, camera, and pose.
+- Show bones from the file's skinning hierarchy; do not invent anatomy or Rigify controls.
+- If a graphic represents a value, label its unit and scale.
+- Apose reference images describe the model shape; bent limbs are separate deformation checks.
 
-## Current implementation
+## Reuse
 
-The portfolio uses these tokens in main.css: warm paper backgrounds, restrained teal and rust accents, spacious sections, soft raised cards, responsive steps, and a hand-built DEMOFIZ preview. Apply the same principles to new pages without copying page-specific layout wholesale.
+These foundations can inform future Kolomo Systems tools. Keep product-specific labels, dimensions, and control groups local to each project.
