@@ -38,6 +38,7 @@ function applyLanguage(next, updateUrl = true) {
   }[language]);
   refreshReferenceCount();
   refreshModelLabels();
+  refreshMappingLabels();
   if (updateUrl) {
     const url = new URL(location.href);
     url.searchParams.set("lang", language);
@@ -273,6 +274,9 @@ async function initializeViewer() {
     canvas.addEventListener("keydown", handleViewerKeys);
     canvas.classList.add("is-ready");
     $("#viewer-placeholder").hidden = true;
+    $("#model-file").disabled = false;
+    $("#load-demo").disabled = false;
+    $(".model-upload-label").classList.remove("is-disabled");
     setViewerStatus("");
     hasWebGL = true;
     animate();
@@ -282,6 +286,7 @@ async function initializeViewer() {
     setViewerStatus(t("statusNoWebGL"), "error");
     $("#load-demo").disabled = true;
     $("#model-file").disabled = true;
+    $(".model-upload-label").classList.add("is-disabled");
   }
 }
 
@@ -627,6 +632,17 @@ function refreshModelLabels() {
   $("#bone-count").textContent = modelHasSkeleton ? t("bonesCount", { count: boneList.length }) : "0";
   $("#mesh-count").textContent = t("meshesCount", { count: meshStates.length });
   $("#selected-bone-state").textContent ||= t("selectedNone");
+}
+
+function refreshMappingLabels() {
+  for (const [key, role, side] of roleKeys) {
+    const label = $(`label[for="map-${key}"]`);
+    if (label) label.textContent = `${t(side)} ${t(role)}`;
+    const select = $(`#map-${key}`);
+    if (select?.options[0]) select.options[0].textContent = t("mappingNone");
+  }
+  const boneSelect = $("#bone-select");
+  if (boneSelect?.options[0] && !boneList.length) boneSelect.options[0].textContent = t("noBones");
 }
 
 function clearModelStatus() {
