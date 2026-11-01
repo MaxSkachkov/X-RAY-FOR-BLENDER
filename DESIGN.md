@@ -1,61 +1,44 @@
-# Skachkov Design — visual principles
+# X-RAY FOR BLENDER — design and interaction notes
 
-This file carries the visual references from the DEMOFIZ redesign into the portfolio and future product pages. Treat the tokens as a starting point; extend them when a real product need calls for it.
+## Product boundary
 
-## Direction
+The app has two separate workflows: preparing 2D character reference views and inspecting an already-created 3D model. It never implies that photographs create a model or rig automatically. Blender remains the production tool for modeling, rig construction, IK, constraints, drivers and Rigify.
 
-- Use a warm, quiet canvas with generous space and clear reading order.
-- Use soft neumorphic relief sparingly: one lifted surface or inset control can show interaction. Avoid adding shadows to every element.
-- Keep the page calm and useful. Each section answers one question; use short, familiar wording.
-- Use diagrams and visualizations to explain a process or relationship. Make them measurable with labels, units, and a clear scale when data is involved.
-- Prefer original CSS or SVG diagrams over decorative stock imagery for explanatory visuals.
+## Visual direction
 
-## Core colors
+- Warm paper background, graphite text, one quiet blue accent.
+- Flat, spacious page structure. Use soft neumorphic shadows only to distinguish a small number of interactive surfaces.
+- Avoid decorative gradients, heavy borders and stacked card layouts.
+- Put the character viewport first in the model inspection area; keep controls secondary.
+- On narrow screens, keep the viewport above the controls and let the document scroll normally.
+
+## Accessibility and agent use
+
+- Core actions use named HTML buttons, links, file inputs, selects and range controls.
+- Keep focus visible, respect reduced motion, and provide readable status text beside the WebGL canvas.
+- Display model filename, mesh count, skeleton state, bone count, selected bone and current mode as text.
+- Human and programmatic actions share native control events and one viewer state.
+
+## Data and compatibility
+
+- Reference images are previewed with browser object URLs and are not persisted.
+- User models are read locally. GLB is accepted; glTF is accepted only when buffers and images are embedded as data URLs. External file resources are rejected.
+- GLB skinning, mesh and embedded animations are viewable when present. A mesh without a skin has no bone features.
+- Pose checks require explicit mapping. Initial matching uses exact bone names only; users can map unmatched bones through native selects.
+- No `.blend` export is offered.
+
+## Tokens
 
 | Token | Value | Use |
 | --- | --- | --- |
-| Paper | #f4f0e7 | Main page background |
-| Paper deep | #ebe5d9 | Quiet section background |
-| Surface | #f7f3eb | Cards and raised controls |
-| Ink | #173b3a | Main text |
-| Ink soft | #526763 | Supporting text |
-| Teal | #176c68 | Links, active states, key data |
-| Teal dark | #105653 | Dark teal interaction states |
-| Warm accent | #d07c54 | Small emphasis or current value |
-| Fine line | #ded8cb | Low contrast separators |
+| Paper | `#f4f0e7` | Main page |
+| Paper deep | `#ebe5d9` | Viewer section |
+| Surface | `#f8f5ed` | Controls |
+| Ink | `#252b31` | Main text |
+| Ink soft | `#59626c` | Secondary text |
+| Blue | `#446d9b` | Action and selected state |
+| Warm accent | `#b17f57` | Small emphasis |
 
-## Shape and depth
+## Assets
 
-- Main cards: 28px radius.
-- Controls: 16px radius; use pill shape only for small navigation actions.
-- Raised surfaces: paired, low contrast shadows from the raised shadow token.
-- Inset surfaces: use the inset shadow token only when an input or selected control needs to look recessed.
-- Keep borders subtle. Add a visible focus ring for keyboard use even when the visual style is soft.
-
-## Type and spacing
-
-- Use a system sans-serif stack for legibility and quick loading.
-- Use large, compact headings and a comfortable body line-height around 1.6.
-- Keep paragraph width limited and split complex information into a short sequence.
-- Use responsive sizes with clamp() and leave at least 18–24px between related controls.
-- On narrow screens, stack content instead of shrinking controls or labels.
-
-## Interaction and accessibility
-
-- Give each page one clear primary action.
-- Use labels that describe the result of an action.
-- Keep keyboard focus visible and provide a skip link on long pages.
-- Respect prefers-reduced-motion.
-- Do not encode meaning with color alone; pair it with text, shape, or position.
-
-## Visualization rules
-
-- A diagram should explain one relationship at a time.
-- Label axes, values, and units whenever the visualization represents measurements.
-- Use a quiet base line and one accent for the active value or result.
-- Avoid decorative grids, legends, and labels that do not help answer the learner's question.
-- For physics simulations, let changing a value produce an immediate, visible, correctly scaled change.
-
-## Current implementation
-
-The portfolio uses these tokens in main.css: warm paper backgrounds, restrained teal and rust accents, spacious sections, soft raised cards, responsive steps, and a hand-built DEMOFIZ preview. Apply the same principles to new pages without copying page-specific layout wholesale.
+The display concept image is explanatory only. The interactive demo is a separate authored GLB mannequin with a real skin and joint hierarchy, dedicated to CC0 1.0.
