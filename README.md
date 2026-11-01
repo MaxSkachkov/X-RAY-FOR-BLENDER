@@ -2,7 +2,7 @@
 
 A small, browser-based companion for preparing character references and inspecting a finished GLB/glTF model before or alongside Blender work.
 
-**Live app:** [maxskachkov.github.io/xrayblender](https://maxskachkov.github.io/xrayblender/)  
+**Live app:** [maxskachkov.github.io/X-RAY-FOR-BLENDER](https://maxskachkov.github.io/X-RAY-FOR-BLENDER/)  
 **Languages:** English (default), Slovak, Ukrainian, Russian.
 
 ## What it does
@@ -27,7 +27,7 @@ The viewer accepts `.glb` and `.gltf` files up to 50 MB. A `.gltf` must embed it
 
 ## Deployment and search metadata
 
-GitHub Pages publishes this repository. The default English page is at `/xrayblender/`; localized routes are `/xrayblender/sk/`, `/xrayblender/uk/`, and `/xrayblender/ru/`. Canonical URLs, `hreflang`, Open Graph metadata, `robots.txt`, and `sitemap.xml` describe these routes.
+GitHub Pages publishes this repository. The default English page is at `/X-RAY-FOR-BLENDER/`; localized routes are `/X-RAY-FOR-BLENDER/sk/`, `/X-RAY-FOR-BLENDER/uk/`, and `/X-RAY-FOR-BLENDER/ru/`. Canonical URLs, `hreflang`, Open Graph metadata, `robots.txt`, and `sitemap.xml` describe these routes.
 
 ## Assets and licensing
 
