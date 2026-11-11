@@ -65,10 +65,11 @@ document.querySelectorAll('[data-slot]').forEach(slot => {
     const old=imageUrls.get(key);if(old)URL.revokeObjectURL(old);
     const url=URL.createObjectURL(file);imageFiles.set(key,file);imageUrls.set(key,url);slot.style.backgroundImage=`url("${url}")`;slot.classList.add('has-image');
     let rm=slot.querySelector('.remove-image');if(!rm){rm=document.createElement('button');rm.type='button';rm.className='remove-image';rm.textContent='×';rm.setAttribute('aria-label',t('removeImage'));rm.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();clearImage(key,slot);});slot.append(rm);}else rm.setAttribute('aria-label',t('removeImage'));
+    attachGuide(slot,key);
     updateRefCount();
   });
 });
-function clearImage(key,slot){const url=imageUrls.get(key);if(url)URL.revokeObjectURL(url);imageUrls.delete(key);imageFiles.delete(key);slot.style.backgroundImage='';slot.classList.remove('has-image');slot.querySelector('.remove-image')?.remove();slot.querySelector('input').value='';updateRefCount();}
+function clearImage(key,slot){const url=imageUrls.get(key);if(url)URL.revokeObjectURL(url);imageUrls.delete(key);imageFiles.delete(key);slot.style.backgroundImage='';slot.classList.remove('has-image');slot.querySelector('.remove-image')?.remove();slot.querySelector('.guide-preview')?.remove();slot.querySelector('.edit-guide')?.remove();guideData.delete(key);slot.querySelector('input').value='';updateRefCount();}
 function updateRefCount(){const required=['front','back','left','right'];const n=required.filter(key=>imageFiles.has(key)).length;document.querySelector('#reference-count').textContent=t('requiredCount',{n});}
 window.addEventListener('beforeunload',()=>imageUrls.forEach(URL.revokeObjectURL));
 document.querySelector('#copy-prompt').addEventListener('click',async()=>{const text=translations[document.body.dataset.locale || locale].promptText;try{await navigator.clipboard.writeText(text);}catch{const area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.opacity='0';document.body.append(area);area.select();document.execCommand('copy');area.remove();}announce(t('copyPrompt')+' ✓');});
@@ -163,3 +164,55 @@ document.querySelectorAll('[data-pose]').forEach(btn=>btn.addEventListener('clic
 }));
 document.querySelector('#animation-select').addEventListener('change',()=>{if(activeAction){activeAction.stop();activeAction=null;}document.querySelector('#animation-toggle').textContent=t('playAnimation');});
 document.querySelector('#animation-toggle').addEventListener('click',()=>{if(!mixer)return;if(activeAction?.isRunning()){activeAction.paused=!activeAction.paused;document.querySelector('#animation-toggle').textContent=activeAction.paused?t('playAnimation'):t('pauseAnimation');return;}const clip=clips[Number(document.querySelector('#animation-select').value)];if(!clip)return;activeAction=mixer.clipAction(clip);activeAction.reset().play();document.querySelector('#animation-toggle').textContent=t('pauseAnimation');announce(t('statusAnimation',{name:clip.name||''}));});
+
+/* Local, editable 2D reference guides. No inference or network uploads. */
+const guideData=new Map();
+const guideWords={
+en:['Edit 2D guide','2D template — adjust joints manually. Not a 3D rig.','Close','Download PNG','Reset guide','Joint','Zoom'],
+ru:['Править 2D-схему','2D-шаблон — подгоните суставы вручную. Это не 3D-риг.','Закрыть','Скачать PNG','Сбросить схему','Сустав','Масштаб'],
+uk:['Редагувати 2D-схему','2D-шаблон — налаштуйте суглоби вручну. Це не 3D-риг.','Закрити','Завантажити PNG','Скинути схему','Суглоб','Масштаб'],
+sk:['Upraviť 2D schému','2D šablóna — upravte kĺby ručne. Toto nie je 3D rig.','Zavrieť','Stiahnuť PNG','Obnoviť schému','Kĺb','Priblíženie']
+};
+const guideEdges=[[0,1],[1,2],[2,3],[1,4],[4,5],[5,6],[1,7],[7,8],[8,9],[3,10],[10,11],[11,12],[3,13],[13,14],[14,15]];
+function initialGuide(key){
+const points=[[.5,.1],[.5,.2],[.5,.35],[.5,.52],[.39,.23],[.3,.37],[.23,.5],[.61,.23],[.7,.37],[.77,.5],[.43,.55],[.42,.75],[.41,.94],[.57,.55],[.58,.75],[.59,.94]];
+if(key==='left'||key==='right')points.forEach((p,i)=>{p[0]=.5+(p[0]-.5)*.3;});
+if(key==='details')return [[.5,.15],[.5,.35],[.5,.6],[.5,.85]];
+return points;
+}
+function paintGuide(ctx,w,h,points){
+ctx.lineWidth=Math.max(2,w/350);ctx.strokeStyle='#168ad0';ctx.fillStyle='#f4faff';
+for(const [a,b] of guideEdges){if(!points[a]||!points[b])continue;ctx.beginPath();ctx.moveTo(points[a][0]*w,points[a][1]*h);ctx.lineTo(points[b][0]*w,points[b][1]*h);ctx.stroke();}
+for(const p of points){ctx.beginPath();ctx.arc(p[0]*w,p[1]*h,Math.max(4,w/180),0,Math.PI*2);ctx.fill();ctx.stroke();}
+}
+function guidePreview(slot,key){
+let cv=slot.querySelector('.guide-preview');if(!cv){cv=document.createElement('canvas');cv.className='guide-preview';cv.setAttribute('aria-hidden','true');cv.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1';slot.append(cv);}
+cv.width=slot.clientWidth||280;cv.height=slot.clientHeight||160;paintGuide(cv.getContext('2d'),cv.width,cv.height,guideData.get(key));
+}
+async function openGuide(key,slot){
+const file=imageFiles.get(key);if(!file)return;
+const bitmap=await createImageBitmap(file);const words=guideWords[locale]||guideWords.en;
+const dialog=document.createElement('dialog');dialog.style.cssText='width:min(96vw,1100px);max-height:94vh;padding:20px;background:#f4f0e7;color:#252b31;border:0;border-radius:16px';
+const title=document.createElement('h2');title.textContent=words[0];dialog.append(title);
+const note=document.createElement('p');note.textContent=words[1];dialog.append(note);
+const toolbar=document.createElement('div');toolbar.style.cssText='display:flex;gap:12px;flex-wrap:wrap;align-items:center';dialog.append(toolbar);
+const button=(text,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=text;b.style.cssText='min-height:44px;padding:8px 14px;cursor:pointer';b.onclick=fn;toolbar.append(b);return b;};
+const joint=document.createElement('select');joint.setAttribute('aria-label',words[5]);joint.style.minHeight='44px';
+guideData.get(key).forEach((_,i)=>{const o=document.createElement('option');o.value=i;o.textContent=words[5]+' '+(i+1);joint.append(o);});toolbar.append(joint);
+const axes={};for(const axis of ['X','Y']){const label=document.createElement('label');label.textContent=axis+' ';const input=document.createElement('input');input.type='range';input.min=0;input.max=1000;input.setAttribute('aria-label',words[5]+' '+axis);label.append(input);toolbar.append(label);axes[axis]=input;input.oninput=()=>{guideData.get(key)[Number(joint.value)][axis==='X'?0:1]=Number(input.value)/1000;draw();};}
+const wrap=document.createElement('div');wrap.style.cssText='overflow:auto;max-height:65vh;margin-top:16px';dialog.append(wrap);
+const cv=document.createElement('canvas');const scale=Math.min(1,2048/Math.max(bitmap.width,bitmap.height));cv.width=Math.round(bitmap.width*scale);cv.height=Math.round(bitmap.height*scale);cv.style.cssText='display:block;width:100%;height:auto;touch-action:pan-y';wrap.append(cv);const ctx=cv.getContext('2d');
+function draw(){ctx.drawImage(bitmap,0,0,cv.width,cv.height);paintGuide(ctx,cv.width,cv.height,guideData.get(key));const p=guideData.get(key)[Number(joint.value)];axes.X.value=p[0]*1000;axes.Y.value=p[1]*1000;guidePreview(slot,key);}
+joint.onchange=draw;
+button(words[4],()=>{guideData.set(key,initialGuide(key));draw();});
+button(words[3],()=>{const out=document.createElement('canvas');out.width=cv.width;out.height=cv.height+40;const c=out.getContext('2d');c.fillStyle='#f4f0e7';c.fillRect(0,0,out.width,out.height);c.drawImage(cv,0,0);c.fillStyle='#252b31';c.font='14px monospace';c.fillText('2D guide template / X-RAY FOR BLENDER',8,out.height-14);out.toBlob(blob=>{if(!blob)return;const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=key+'-2d-guide.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},'image/png');});
+button(words[2],()=>dialog.close());
+const zoomLabel=document.createElement('label');zoomLabel.textContent=words[6]+' ';const zoom=document.createElement('input');zoom.type='range';zoom.min=100;zoom.max=300;zoom.value=100;zoom.setAttribute('aria-label',words[6]);zoom.oninput=()=>cv.style.width=zoom.value+'%';zoomLabel.append(zoom);toolbar.append(zoomLabel);
+dialog.addEventListener('close',()=>{bitmap.close();dialog.remove();},{once:true});document.body.append(dialog);dialog.showModal();draw();
+}
+function attachGuide(slot,key){
+guideData.set(key,initialGuide(key));guidePreview(slot,key);
+let b=slot.querySelector('.edit-guide');
+if(!b){b=document.createElement('button');b.type='button';b.className='edit-guide';b.style.cssText='position:absolute;bottom:5px;left:5px;right:5px;z-index:4;min-height:44px;border:0;border-radius:8px;background:#f4f0e7;color:#252b31;cursor:pointer';b.onclick=e=>{e.preventDefault();e.stopPropagation();openGuide(key,slot).catch(()=>announce(t('invalidImage')));};slot.append(b);}
+b.textContent=(guideWords[locale]||guideWords.en)[0];
+}
